@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Mwfw Soundboard</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">Home</string>
+    <string name="movies">Filmpkes</string>
+    <string name="info">Info</string>
+    <string name="info_voorverkooppunten">VVK: Paesmans Herk-de-Stad, Sint-Truidersteenweg 9 / Megusto, Markt 26 - Herk-de-Stad
+Café Pallieter, Ridderstraat - Herk-de-Stad / Tresbo, Staatbaan 1 - Halen
+Gigaswing, Kapelstraat - Hasselt / Spoorcafé, Turnhoutsebaan 7 - Diest</string>
+
+    <string name="info_general">VVK €5 \n
+KASSA €7 \n
+VERWARMDE TENT  \n
+        INDUSTRIETERREIN \n
+HERK-DE-STAD \n
+GRATIS FUIFBUS</string>
+    <string name="sociale_media">Social Media</string>
+</resources>

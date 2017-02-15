@@ -1,0 +1,63 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#404040"
+    android:orientation="vertical"
+    tools:context="be.flashapps.mwfwsoundboard.fragments.InfoFragment">
+
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"/>
+
+    <TextView
+        android:id="@+id/tv_info_general"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:textColor="@color/md_white_1000"
+        android:text="@string/info_general"
+        android:textSize="@dimen/font_larger"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_weight="2"/>
+
+
+    <TextView
+        android:id="@+id/tv_info_dj"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:textColor="@color/md_white_1000"
+        android:text="SKYVE en DJ F.R.A.N.K"
+        android:textSize="@dimen/font_larger"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_weight="0.75"/>
+
+    <TextView
+        android:id="@+id/tv_info_minor_dj"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:textColor="@color/md_white_1000"
+        android:text="kwijt trek system en Smiley beats brüders"
+        android:textSize="@dimen/font_normal"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_weight="0.5"/>
+
+    <TextView
+        android:layout_weight="1"
+        android:id="@+id/tv_info_verkooppunten"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:textColor="@color/md_white_1000"
+        android:text="@string/info_voorverkooppunten"
+        android:textSize="@dimen/font_small"
+        android:textStyle="bold"
+        android:layout_gravity="bottom"
+        android:gravity="center_horizontal|bottom"
+        android:padding="@dimen/spacing_normal"/>
+
+</LinearLayout>
