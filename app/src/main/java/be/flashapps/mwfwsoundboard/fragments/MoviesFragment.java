@@ -100,7 +100,7 @@ public class MoviesFragment extends Fragment {
         videos.add(new Video(2014, "https://www.youtube.com/watch?v=nXNugahgdBQ", R.drawable.mwfw2014));//2014
         videos.add(new Video(2015, "https://www.youtube.com/watch?v=rKMJu4UWf3s", R.drawable.mwfw2015));//2015
         videos.add(new Video(2016, "https://www.youtube.com/watch?v=WMhppMK9H6c", R.drawable.mwfw2016));//2016
-        videos.add(new Video(2017, "coming soon", R.drawable.mwfw2017));//2017
+        videos.add(new Video(2017, "https://www.youtube.com/watch?v=hOgLMwfjnZI", R.drawable.mwfw2017));//2017
     }
 
     public void startVideo(String url) {
