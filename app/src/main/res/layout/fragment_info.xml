@@ -24,30 +24,30 @@
         android:gravity="center"
         android:layout_weight="2"/>
 
+    <TextView
+        android:id="@+id/tv_info_general_extra"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:textColor="@color/md_white_1000"
+        android:text="@string/info_general_extra"
+        android:textSize="@dimen/font_normal"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_weight="2"/>
+
 
     <TextView
         android:id="@+id/tv_info_dj"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:textColor="@color/md_white_1000"
-        android:text="SKYVE en DJ F.R.A.N.K"
+        android:text="@string/disk_jockeys"
         android:textSize="@dimen/font_larger"
         android:textStyle="bold"
         android:gravity="center"
-        android:layout_weight="0.75"/>
+        android:layout_weight="2"/>
 
-    <TextView
-        android:id="@+id/tv_info_minor_dj"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:textColor="@color/md_white_1000"
-        android:text="kwijt trek system en Smiley beats brüders"
-        android:textSize="@dimen/font_normal"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_weight="0.5"/>
-
-    <TextView
+    <!--<TextView
         android:layout_weight="1"
         android:id="@+id/tv_info_verkooppunten"
         android:layout_width="match_parent"
@@ -58,6 +58,6 @@
         android:textStyle="bold"
         android:layout_gravity="bottom"
         android:gravity="center_horizontal|bottom"
-        android:padding="@dimen/spacing_normal"/>
+        android:padding="@dimen/spacing_normal"/>-->
 
 </LinearLayout>

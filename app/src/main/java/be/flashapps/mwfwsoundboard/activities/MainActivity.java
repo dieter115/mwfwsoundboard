@@ -5,36 +5,29 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.splashscreen.SplashScreen;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
-import com.mikepenz.materialdrawer.AccountHeader;
-import com.mikepenz.materialdrawer.AccountHeaderBuilder;
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.orhanobut.logger.Logger;
 
-import be.flashapps.mwfwsoundboard.App;
+import java.util.ArrayList;
+import java.util.Random;
+
 import be.flashapps.mwfwsoundboard.Helpers.Helper_Fragments;
 import be.flashapps.mwfwsoundboard.R;
+import be.flashapps.mwfwsoundboard.databinding.ActivityMainBinding;
 import be.flashapps.mwfwsoundboard.fragments.HomeFragment;
 import be.flashapps.mwfwsoundboard.fragments.InfoFragment;
 import be.flashapps.mwfwsoundboard.fragments.MoviesFragment;
 import be.flashapps.mwfwsoundboard.fragments.SocialMediaFragment;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    private static final int IDENTIFIER_HOME = 4, IDENTIFIER_MOVIES = 1, IDENTIFIER_INFO = 2, IDENTIFIER_SOCIAL = 5;
     HomeFragment homeFragment;
     MoviesFragment moviesFragment;
     InfoFragment infoFragment;
@@ -47,35 +40,48 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private double mAccel;
     private double mAccelCurrent;
     private double mAccelLast;
-    private MaterialDialog loesDialog;
+    private MaterialDialog kupkesDialog;
     private static final String MAINMENUTAG = "mainmenu";
-    int teller=0;
+    int teller = 0;
+
+    private ActivityMainBinding binding;
+
+    private ArrayList<Integer> kupkes = new ArrayList<Integer>() {
+        {
+            add(R.drawable.viktor_1);
+            add(R.drawable.viktor_2);
+            add(R.drawable.koentje_1);
+            add(R.drawable.koentje_2);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-        homeFragment = HomeFragment.newInstance("", "");
-        moviesFragment = MoviesFragment.newInstance("", "");
-        infoFragment = InfoFragment.newInstance("", "");
-        socialMediaFragment = SocialMediaFragment.newInstance("", "");
-        fixSideMenu();
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
+        setSupportActionBar(binding.toolbar);
+        homeFragment = HomeFragment.newInstance();
+        moviesFragment = MoviesFragment.newInstance();
+        infoFragment = InfoFragment.newInstance();
+        socialMediaFragment = SocialMediaFragment.newInstance();
 
-        mSensorManager = (SensorManager) getSystemService(App.getContext().SENSOR_SERVICE);
-        if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+        fixBottomMenu();
+
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        if (mSensor != null) {
             // Success! There's a magnetometer.
-            Logger.d("accelometer!!!!");
-            mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            Logger.d("sensor for you!!!!");
         } else {
             // Failure! No magnetometer.
-            Logger.d("no accelometer!!!!");
+            Logger.d("no sensor for you!!!");
         }
 
-        loesDialog = new MaterialDialog.Builder(this)
-                .customView(R.layout.loes_layout, false)
+        kupkesDialog = new MaterialDialog.Builder(this)
+                .customView(R.layout.kupkes_layout, false)
                 .build();
     }
 
@@ -94,73 +100,27 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
-    public void fixSideMenu() {
-        PrimaryDrawerItem homeDrawerItem = new PrimaryDrawerItem().withIdentifier(IDENTIFIER_HOME).withName(R.string.home);
-        PrimaryDrawerItem moviesDrawerItem = new PrimaryDrawerItem().withIdentifier(IDENTIFIER_MOVIES).withName(R.string.movies);
-        PrimaryDrawerItem infoDrawerItem = new PrimaryDrawerItem().withIdentifier(IDENTIFIER_INFO).withName(R.string.info);
-        PrimaryDrawerItem socialDrawerItem = new PrimaryDrawerItem().withIdentifier(IDENTIFIER_SOCIAL).withName(R.string.sociale_media);
+    public void fixBottomMenu() {
+        binding.bottomBar.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.action_home) {
+                Helper_Fragments.replaceFragment(MainActivity.this, homeFragment, false, MAINMENUTAG);
+            } else if (item.getItemId() == R.id.action_movie) {
+                //beheermodule openen in webview
+                Helper_Fragments.replaceFragment(MainActivity.this, moviesFragment, false, MAINMENUTAG);
+            } else if (item.getItemId() == R.id.action_info) {
+                //settings openen
+                Helper_Fragments.replaceFragment(MainActivity.this, infoFragment, false, MAINMENUTAG);
+            } else if (item.getItemId() == R.id.action_social) {
+                //settings openen
+                Helper_Fragments.replaceFragment(MainActivity.this, socialMediaFragment, false, MAINMENUTAG);
+            }
+            return true;
+        });
 
+        binding.bottomBar.setSelectedItemId(R.id.action_home);
 
-        AccountHeader headerResult = new AccountHeaderBuilder()
-                .withActivity(this)
-                .withHeaderBackground(R.drawable.mwfw2017)
-                .withHeaderBackgroundScaleType(ImageView.ScaleType.CENTER_INSIDE)
-                .withSelectionListEnabledForSingleProfile(false)
-               /* .addProfiles(
-                        new ProfileDrawerItem().withName("Beveiligingsafdeling")*//*.withEmail("mikepenz@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile))*//*
-                )*/
-                /*.withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
-                    @Override
-                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
-                        return false;
-                    }
-                })*/
-                .build();
-
-        headerResult.getView().findViewById(R.id.material_drawer_account_header_current).setVisibility(View.GONE);//volledig hiden van profile bezel image view in header.xml
-
-
-        Drawer drawer = new DrawerBuilder()
-                .withActivity(this)
-                .withToolbar(toolbar)
-                .withAccountHeader(headerResult)
-                .addDrawerItems(
-                        homeDrawerItem,
-                        moviesDrawerItem,
-                        infoDrawerItem,
-                        socialDrawerItem
-                )
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        if (drawerItem.getIdentifier() == IDENTIFIER_HOME) {
-                            Helper_Fragments.replaceFragment(MainActivity.this, homeFragment, false, MAINMENUTAG);
-                        } else if (drawerItem.getIdentifier() == IDENTIFIER_MOVIES) {
-                            //beheermodule openen in webview
-                            Helper_Fragments.replaceFragment(MainActivity.this, moviesFragment, false, MAINMENUTAG);
-                        } else if (drawerItem.getIdentifier() == IDENTIFIER_INFO) {
-                            //settings openen
-                            Helper_Fragments.replaceFragment(MainActivity.this, infoFragment, false, MAINMENUTAG);
-                        } else if (drawerItem.getIdentifier() == IDENTIFIER_SOCIAL) {
-                            //settings openen
-                            Helper_Fragments.replaceFragment(MainActivity.this, socialMediaFragment, false, MAINMENUTAG);
-                        }
-                        return false;
-                    }
-                })
-                .build();
-
-
-        drawer.setSelection(IDENTIFIER_HOME);
     }
 
-    /* @Override
-     public boolean onCreateOptionsMenu(Menu menu) {
-         // Inflate the menu; this adds items to the action bar if it is present.
-         getMenuInflater().inflate(R.menu.menu_main, menu);
-         return true;
-     }
- */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -176,51 +136,50 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return super.onOptionsItemSelected(item);
     }
 
+    // Create a constant to convert nanoseconds to seconds.
+    private static final float NS2S = 1.0f / 1000000000.0f;
+    private static final float THRESHOLD = 15f;
+    private final float[] deltaRotationVector = new float[4];
+    private float timestamp;
+    private float rotationCurrent;
+
+
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            mGravity = event.values.clone();
-            // Shake detection
-            float x = mGravity[0];
-            float y = mGravity[1];
-            float z = mGravity[2];
-            mAccelLast = mAccelCurrent;
-            mAccelCurrent = Math.sqrt(x * x + y * y + z * z);
-            double delta = mAccelCurrent - mAccelLast;
-            mAccel = mAccel * 0.9f + delta;
-            // Make this higher or lower according to how much
-            // motion you want to detect
-            if (mAccel > 25) {
-                // do something
-                if (x == Math.max(x, y) && x == Math.max(x, z)) {
-                    if(teller>=5) {
-                        if (!loesDialog.isShowing()) {
-                            int range = (100 - 1) + 1;
-                            int random = (int) (Math.random() * range) + 1;
-                            ImageView ivLoes = (ImageView) loesDialog.getCustomView().findViewById(R.id.iv_loes);
-                            if (random % 2 == 1) {
-                                Glide.with(App.getContext())
-                                        .load(R.drawable.loes1)
-                                        .fitCenter()
-                                        .crossFade()
-                                        .into(ivLoes);
-                            } else {
-                                Glide.with(App.getContext())
-                                        .load(R.drawable.loes2)
-                                        .fitCenter()
-                                        .crossFade()
-                                        .into(ivLoes);
-                            }
-                            loesDialog.show();
-                        }
-                        teller=0;
+        if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {
+
+            // This timestep's delta rotation to be multiplied by the current rotation
+            // after computing it from the gyro sample data.
+            if (timestamp != 0) {
+                final float dT = (event.timestamp - timestamp) * NS2S;
+                // Axis of the rotation sample, not normalized yet.
+                float axisX = event.values[0];
+                float axisY = event.values[1];
+                float axisZ = event.values[2];
+
+                // Calculate the angular speed of the sample
+                float omegaMagnitude = (float) Math.sqrt(axisX * axisX + axisY * axisY + axisZ * axisZ);
+
+                // Normalize the rotation vector if it's big enough to get the axis
+                // (that is, EPSILON should represent your maximum allowable margin of error)
+                //do something if magnitude is high enough and the x value is higher then the y and z value
+
+                if (omegaMagnitude > THRESHOLD && axisX == Math.max(axisX, axisY) && axisX == Math.max(axisX, axisZ)) {
+                    if (event.timestamp - timestamp > 1000) {
+                        teller++;
+                        Logger.e("omegamagnitude " + omegaMagnitude + " teller " + teller);
                     }
-                    teller++;
+
+                    if (teller >= 2) {
+                        int random = (int)(Math.random() * kupkes.size());
+                        Glide.with(this).load(kupkes.get(random)).into((AppCompatImageView) kupkesDialog.findViewById(R.id.ivKupke));
+                        kupkesDialog.show();
+                        teller = 0;
+                    }
                 }
             }
+            timestamp = event.timestamp;
         }
-
-
     }
 
     @Override

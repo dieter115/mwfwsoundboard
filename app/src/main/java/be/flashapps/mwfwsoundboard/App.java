@@ -7,12 +7,7 @@ package be.flashapps.mwfwsoundboard;
 import android.app.Application;
 import android.content.Context;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.orhanobut.logger.Logger;
-
-import io.fabric.sdk.android.Fabric;
-
 
 public class App extends Application {
 
@@ -25,12 +20,6 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         Logger.init("mwfw soundboard");
-
-
-        if(!BuildConfig.DEBUG) {
-            CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build();
-            Fabric.with(this, new Crashlytics.Builder().core(core).build(), new Crashlytics());
-        }
         instance = this;
     }
 

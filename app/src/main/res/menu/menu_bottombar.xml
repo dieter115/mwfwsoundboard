@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="be.flashapps.mwfwsoundboard.activities.MainActivity">
+    <item
+        android:id="@+id/action_home"
+        android:title="@string/home"
+        android:icon="@drawable/ic_baseline_home_24"
+        />
+
+    <item
+        android:id="@+id/action_movie"
+        android:title="@string/movies"
+        android:icon="@drawable/ic_baseline_local_movies_24"
+        />
+
+    <item
+        android:id="@+id/action_info"
+        android:title="@string/info"
+        android:icon="@drawable/ic_socials"
+        />
+
+    <item
+        android:id="@+id/action_social"
+        android:title="@string/sociale_media"
+        android:icon="@drawable/ic_baseline_info_24"
+        />
+</menu>

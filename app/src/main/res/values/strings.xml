@@ -7,15 +7,21 @@
     <string name="home">Home</string>
     <string name="movies">Filmpkes</string>
     <string name="info">Info</string>
+    <string name="sociale_media">Social Media</string>
+
     <string name="info_voorverkooppunten">VVK: Paesmans Herk-de-Stad, Sint-Truidersteenweg 9 / Megusto, Markt 26 - Herk-de-Stad
 Café Pallieter, Ridderstraat - Herk-de-Stad / Tresbo, Staatbaan 1 - Halen
 Gigaswing, Kapelstraat - Hasselt / Spoorcafé, Turnhoutsebaan 7 - Diest</string>
 
-    <string name="info_general">VVK €5 \n
-KASSA €7 \n
+    <string name="info_general">
 VERWARMDE TENT  \n
         INDUSTRIETERREIN \n
 HERK-DE-STAD \n
-GRATIS FUIFBUS</string>
-    <string name="sociale_media">Social Media</string>
+GRATIS FUIFBUS \n</string>
+
+    <string name="info_general_extra">
+    FIETSENPARKING TER PLAATSE - VESTIAIRE TER BESCHIKKING - GRATIS WC\'S \n
+BIER: JUPILER ZOVEEL ALS GE MAAR WILT - VERLICHT BUITENPLEIN \n
+COCKTAIL- CAVABAR - HOTDOGS EN BITTERBALLEN</string>
+    <string name="disk_jockeys">Special Act \n Dj Poney \n Michael Amani \n Gunther D \n Kwijt Trek System</string>
 </resources>

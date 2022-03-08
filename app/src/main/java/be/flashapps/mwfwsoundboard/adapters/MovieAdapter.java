@@ -1,11 +1,12 @@
 package be.flashapps.mwfwsoundboard.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
@@ -14,9 +15,8 @@ import java.util.List;
 
 import be.flashapps.mwfwsoundboard.App;
 import be.flashapps.mwfwsoundboard.R;
+import be.flashapps.mwfwsoundboard.databinding.VideoItemBinding;
 import be.flashapps.mwfwsoundboard.models.Video;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by dietervaesen on 8/09/15.
@@ -37,31 +37,29 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.VideoViewHol
         this.movies = sounds;
     }
 
-    public static class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        @BindView(R.id.iv_poster)
-        ImageView ivPoster;
-
-        List<Video> videoList;
-        Context context;
+    public static class VideoViewHolder extends RecyclerView.ViewHolder {
         VideoAdapterOnClickListener aaListener;
-        int position;
-
-        public VideoViewHolder(View itemView, VideoAdapterOnClickListener aaListener) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(this);
+        VideoItemBinding videoItemBinding;
+        public VideoViewHolder(VideoItemBinding videoItemBinding, VideoAdapterOnClickListener aaListener) {
+            super(videoItemBinding.getRoot());
+            this.videoItemBinding = videoItemBinding;
             this.aaListener = aaListener;
         }
 
-        @Override
-        public void onClick(View v) {
-            aaListener.onClick(v, position, videoList);
+        public void bind(Video current) {
+            itemView.setOnClickListener(view ->{
+                aaListener.onClick(view,current);
+            });
+
+            Glide.with(App.getContext())
+                    .load(current.getImageId())
+                    .fitCenter()
+                    .into(videoItemBinding.ivPoster);
         }
     }
 
     public static interface VideoAdapterOnClickListener {
-        public void onClick(View v, int position, List<Video> sounds);
+        public void onClick(View v,Video video);
     }
 
     public void setVideoOnclickListener(final VideoAdapterOnClickListener mItemClickListener) {
@@ -71,7 +69,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.VideoViewHol
 
     @Override
     public VideoViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.video_item, viewGroup, false);
+        VideoItemBinding v = VideoItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
         VideoViewHolder cvh = new VideoViewHolder(v, videoAdapterOnClickListener);
         return cvh;
     }
@@ -80,14 +78,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.VideoViewHol
     @Override
     public void onBindViewHolder(VideoViewHolder videoViewHolder, int i) {
         Video current = movies.get(i);
-
-        Glide.with(App.getContext())
-                .load(current.getImageId())
-                .fitCenter()
-                .crossFade()
-                .into(videoViewHolder.ivPoster);
-        videoViewHolder.position = i;
-        videoViewHolder.videoList = movies;
+        videoViewHolder.bind(current);
     }
 
     @Override

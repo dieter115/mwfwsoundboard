@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="@dimen/spacing_small"
-        android:text="mwfw2016"
+        android:text="mwfw2022"
         android:textStyle="bold" />
 
     <TextView

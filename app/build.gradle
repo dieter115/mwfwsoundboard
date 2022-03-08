@@ -1,27 +1,10 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-apt'
-apply plugin: 'io.fabric'
-apply plugin: 'let'
 
-
-buildscript {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-    }
-
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
-    }
-}
-
-
-
-repositories {
-    maven { url 'https://maven.fabric.io/public' }
-    maven {
-        url "http://dl.bintray.com/iravul/maven"
-    }
+/**
+ * Check if a signing.gradle file exists and import it
+ */
+if (file(rootProject.projectDir.getAbsolutePath() + '/signing.gradle').exists()) {
+    apply from: rootProject.projectDir.getAbsolutePath() + '/signing.gradle'
 }
 
 // define build version
@@ -30,76 +13,50 @@ def versionMinor = 1
 def versionPatch = 0
 def versionBuild = 0
 
-/**
- * Check if a signing.gradle file exists and import it
- */
-if (file(rootProject.projectDir.getAbsolutePath() + '/signing.gradle').exists()) {
-    apply from: rootProject.projectDir.getAbsolutePath() + '/signing.gradle'
-}
 android {
-    signingConfigs {
-        release {
-            keyAlias 'mwfw'
-            keyPassword 'Dietervaesen987'
-            storeFile file('/Users/dietervaesen/Documents/Appwise/mwfwsoundboard.jks')
-            storePassword 'Dietervaesen987'
-        }
-    }
-    compileSdkVersion 25
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 32
     defaultConfig {
         applicationId "be.flashapps.mwfwsoundboard"
-        minSdkVersion 16
-        targetSdkVersion 23
+        minSdkVersion 21
+        targetSdkVersion 32
 
         // generate versionCode and versionName from defined major, minor, versionPatch, versionBuild
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
-
-        // Enabling multidex support.
-        multiDexEnabled true
-        vectorDrawables.useSupportLibrary = true
-
-
-        dexOptions {
-            preDexLibraries true
-            javaMaxHeapSize "4g"
-        }
+        flavorDimensions "versionCode"
     }
-    productFlavors {
-        fastBuild {
-            minSdkVersion 21 //faster build times
-        }
-        regular {
-            // The regular minSdkVersion you use in your application
-            minSdkVersion 17
-        }
-    }
-    applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            def file = output.outputFile
-            if (file != null && file.name.endsWith('.apk')) {
-                def suffix = "_" + defaultConfig.applicationId + "_" + defaultConfig.versionName + "_" + defaultConfig.versionCode
-                def outputFileName = file.name.replace(".apk", suffix + ".apk")
-                output.outputFile = new File(file.parent, outputFileName)
-            }
-        }
-    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            lintOptions {
-                disable 'MissingTranslation'
-            }
-            /**
-             * If we have signingconfig for this buildType we'll use it here
-             * this block should be added to every buildtype that needs signing
-             */
-            if (signingConfigs.hasProperty("release")) {
-                signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
+        }
+    }
+    /*applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def file = output.outputFile
+            if (file != null && file.name.endsWith('.apk')) {
+                def suffix = "_" + defaultConfig.applicationId + "_" + defaultConfig.versionName + "_" + defaultConfig.versionCode
+                def outputFileNameTest = file.name.replace(".apk", suffix + ".apk")
+                outputFileName = new File(outputFileNameTest)
             }
         }
+    }*/
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def file = output.outputFile
+            if (file != null && file.name.endsWith('.apk')) {
+                def suffix = "_" + defaultConfig.applicationId + "_" + defaultConfig.versionName + "_" + defaultConfig.versionCode + ".apk"
+                def outputFileNameTest = file.name.replace(".apk", suffix)
+                outputFileName = new File(outputFileNameTest)
+            }
+        }
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
     /*configurations.all {
         resolutionStrategy {
@@ -111,44 +68,35 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    //Parse and Bolts
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
-        transitive = true;
-    }
-    //Realm adapters
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     //Dialogs
-    compile('com.mikepenz:materialdrawer:5.8.0@aar') {
+    implementation('com.mikepenz:materialdrawer:5.8.0@aar') {
         transitive = true
     }
-    /*voor versies ouder dan 19*/
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.jakewharton:butterknife:8.4.0'
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:cardview-v7:25.1.0'
-    compile 'com.android.support:recyclerview-v7:25.1.0'
-    compile 'com.android.support:design:25.1.0'
-    compile 'com.android.support:support-v4:25.1.0'
-    compile 'com.github.orhanobut:logger:1.12'
-    compile 'com.google.code.gson:gson:2.6.2'
-    compile 'com.pixplicity.easyprefs:library:1.5'
-    compile 'com.google.android.gms:play-services-maps:9.8.0'
-    compile 'com.google.maps.android:android-maps-utils:0.4.+'
-    compile 'com.google.android.gms:play-services-location:9.8.0'
-    compile 'com.google.android.gms:play-services-gcm:9.8.0'
-    compile 'com.afollestad.material-dialogs:core:0.9.0.1'
-    compile 'com.afollestad.material-dialogs:commons:0.9.0.1'
-    compile 'net.danlew:android.joda:2.9.5'
-    compile 'com.facebook.shimmer:shimmer:0.1.0@aar'
-    compile 'io.realm:android-adapters:1.4.0'
-    compile 'com.github.rubensousa:gravitysnaphelper:1.0'
-    compile 'com.iravul.swipecardview:swipecardview:1.0.0'
-    testCompile 'junit:junit:4.12'
-    androidTestCompile 'junit:junit:4.12'
-    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.github.orhanobut:logger:1.12'
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.pixplicity.easyprefs:library:1.5'
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
+    implementation 'com.google.android.gms:play-services-gcm:17.0.0'
+    implementation 'com.afollestad.material-dialogs:core:0.9.0.1'
+    implementation 'com.afollestad.material-dialogs:commons:0.9.0.1'
+    implementation 'net.danlew:android.joda:2.9.5'
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
+    implementation 'io.realm:android-adapters:1.4.0'
+    implementation 'com.github.rubensousa:gravitysnaphelper:1.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    implementation 'androidx.core:core-splashscreen:1.0.0-beta01'
+
 }
 
 

@@ -9,11 +9,12 @@ import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,8 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import be.flashapps.mwfwsoundboard.R;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import be.flashapps.mwfwsoundboard.databinding.FragmentInfoBinding;
 
 
 public class InfoFragment extends Fragment implements OnMapReadyCallback {
@@ -40,29 +40,17 @@ public class InfoFragment extends Fragment implements OnMapReadyCallback {
     private String mParam2;
     private Activity mActivity;
 
-    @BindView(R.id.tv_info_verkooppunten)
-    TextView tvInfoVerkooppunten;
-    @BindView(R.id.tv_info_general)
-    TextView tvInfoGeneral;
-    @BindView(R.id.tv_info_dj)
-    TextView tvInfoDj;
-    @BindView(R.id.tv_info_minor_dj)
-    TextView tvInfoMinorDj;
-    MapView mMapView;
+    FragmentInfoBinding fragmentInfoBinding;
+    private View mCustomMarkerView;
 
-    View mCustomMarkerView;
 
     public InfoFragment() {
         // Required empty public constructor
     }
 
 
-    public static InfoFragment newInstance(String param1, String param2) {
+    public static InfoFragment newInstance() {
         InfoFragment fragment = new InfoFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -79,24 +67,20 @@ public class InfoFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_info, container, false);
-        ButterKnife.bind(this, root);
-        Typeface tf = Typeface.createFromAsset(mActivity.getAssets(),
-                "fonts/RosewoodStd-Fill.otf");
-        tvInfoVerkooppunten.setTypeface(tf);
-        tvInfoGeneral.setTypeface(tf);
-        tvInfoDj.setTypeface(tf);
-        tvInfoMinorDj.setTypeface(tf);
+        fragmentInfoBinding = FragmentInfoBinding.inflate(inflater, container, false);
+        Typeface tf = Typeface.createFromAsset(mActivity.getAssets(), "fonts/RosewoodStd-Fill.otf");
+        fragmentInfoBinding.tvInfoGeneral.setTypeface(tf);
+        fragmentInfoBinding.tvInfoGeneralExtra.setTypeface(tf);
+        fragmentInfoBinding.tvInfoDj.setTypeface(tf);
 
-        mMapView = (MapView) root.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
+        fragmentInfoBinding.mapView.onCreate(savedInstanceState);
 
-        mMapView.onResume();
-        mMapView.getMapAsync(this);
+        fragmentInfoBinding.mapView.onResume();
+        fragmentInfoBinding.mapView.getMapAsync(this);
 
         mCustomMarkerView = ((LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_custom_marker, null);
 
-        return root;
+        return fragmentInfoBinding.getRoot();
     }
 
 
@@ -155,24 +139,24 @@ public class InfoFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onResume() {
         super.onResume();
-        mMapView.onResume();
+        fragmentInfoBinding.mapView.onResume();
     }
 
     @Override
     public void onPause() {
-        mMapView.onPause();
+        fragmentInfoBinding.mapView.onPause();
         super.onPause();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mMapView.onDestroy();
+        fragmentInfoBinding.mapView.onDestroy();
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mMapView.onLowMemory();
+        fragmentInfoBinding.mapView.onLowMemory();
     }
 }

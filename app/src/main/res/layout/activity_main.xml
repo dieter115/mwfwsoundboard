@@ -4,24 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="be.flashapps.mwfwsoundboard.activities.MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="be.flashapps.mwfwsoundboard.activities.MainActivity">
 
 
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/primary"
-             />
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primary" />
 
     <!--app:popupTheme="@style/AppTheme.PopupOverlay"-->
 
 
+    <include
+        layout="@layout/content_main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-    <include layout="@layout/content_main" />
 
-
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        app:labelVisibilityMode="labeled"
+        style="@style/BottomNavStyle"
+        app:menu="@menu/menu_bottombar" />
 
 </LinearLayout>
